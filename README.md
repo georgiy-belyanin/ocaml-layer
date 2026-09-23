@@ -37,6 +37,15 @@ For actual use, follow these steps:
 You can reuse and adapt the [CircleCI config](.circleci/config.yml) of
 this repo to rebuild your images on a weekly basis or so.
 
+Caching Build
+--
+
+By default `force_tag` is the build date, stamped into an early `RUN echo`
+layer. So a `make` on a new day flushes the Docker cache for every layer
+below it. If you need fast iterative rebuilds instead, explicitly set
+`force_tag` to a fixed value in your `configs/*.sh` and bump it manually
+when you want to rebuild from scratch.
+
 Example
 --
 
