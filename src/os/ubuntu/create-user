@@ -18,8 +18,8 @@ if id -u "$user" > /dev/null 2>&1 ]]; then
   echo "Not creating user '$user' since it already exists."
 else
   echo "Creating user '$user'."
-  addgroup "$user" --gid 121
-  adduser  --uid 1001 --gid 121 --disabled-password "$user" --gecos ''
+  groupadd "$user" --gid 121
+  useradd --uid 1001 --gid 121 --no-create-home --no-user-group --system --shell /bin/false "$user"
   echo "$user ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/"$user"
   chmod 440 /etc/sudoers.d/"$user"
   chown root:root /etc/sudoers.d/"$user"

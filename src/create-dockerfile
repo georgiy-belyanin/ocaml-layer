@@ -235,4 +235,15 @@ RUN $(multiline ./.ocaml-setup/opam/install-opam-packages $opam_packages)
 $([[ "$no_cmd" = true ]] || (echo; echo "CMD $cmd") )
 
 COPY Dockerfile /Dockerfile
+
+# For benchmarks
+
+USER root
+ADD Chrobelias /Chrobelias
+RUN chown -R $create_user:$create_user /Chrobelias
+
+USER $create_user
+WORKDIR /Chrobelias
+
+RUN ["opam", "exec", "--", "dune", "build", "@all"]
 EOF

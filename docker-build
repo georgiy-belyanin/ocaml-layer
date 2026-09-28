@@ -60,6 +60,10 @@ build() {
     cp -a src/opam tmp
     cp -a src/create-dockerfile tmp
 
+    rsync -a --delete \
+      --exclude _build --exclude .git --exclude results --exclude stats \
+      Chrobelias/ tmp/Chrobelias/
+
     extra_build_options=()
     for url in "${extra_docker_urls[@]}"; do
       extra_build_options+=( -t "$url" )
@@ -76,10 +80,10 @@ build() {
         --opam-packages "$opam_packages" \
         --opam-switch "$opam_switch" \
         --opam-switch-options "$opam_switch_options"
-      docker build -t "$docker_url" "${extra_build_options[@]}" .
+      docker build -t "$docker_url" --platform linux/amd64 "${extra_build_options[@]}" .
 
       # Sanity check.
-      docker run -t "$docker_url" opam exec -- ocamlc -v
+      docker run -t "$docker_url" --platform linux/amd64 opam exec -- ocamlc -v
     )
 
     echo "$docker_url" >> "$pushme"
